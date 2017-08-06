@@ -98,9 +98,9 @@ class Ball
   void ChangeDz(float ddz) { SetDz(GetDz() + ddz); }
   void Display() 
   {
-    translate(GetX(), GetY());
+    translate(GetX(), GetY(), GetZ());
     sphere(GetRadius());
-    translate(-GetX(), -GetY());
+    translate(-GetX(), -GetY(), -GetZ());
   }
   void Move()
   {
@@ -237,7 +237,8 @@ void draw()
       player_2.SetY(map(serial_port.read(), 1, 255, miny, maxy));
     }
   }
-  background(0);
+  background(32);
+  ambientLight(64, 64, 64);
   noStroke();
   directionalLight(255, 0, 0, -cos(hoek_z * 5.0), -sin(hoek_z * 5.0), 0);
   directionalLight(0, 255, 0, 0, -cos(hoek_z * 7.0), -sin(hoek_z * 7.0));
@@ -270,41 +271,38 @@ void draw()
   hoek_z += speed_z;
 }
 
+void DrawBlockLine(Coordinat from, Coordinat to)
+{
+  for (float i = 0; i < 100.0; i += 1.0)
+  {
+    final float block_x = from.GetX() + ((i / 100.0) * (to.GetX() - from.GetX()));
+    final float block_y = from.GetY() + ((i / 100.0) * (to.GetY() - from.GetY()));
+    final float block_z = from.GetZ() + ((i / 100.0) * (to.GetZ() - from.GetZ()));
+    translate(block_x, block_y, block_z);
+    box(10);
+    translate(-block_x, -block_y, -block_z);
+  }
+}
+
 void draw_surrounding()
 {
-  //Draw surrounding
-  for (float i = 0; i < 100.0; i += 1.0)
-  {
-    final float block_x = minx + ((i / 100.0) * (maxx - minx));
-    final float block_y = miny ;
-    translate(block_x, block_y);
-    box(10);
-    translate(-block_x, -block_y);
-  }
-  for (float i = 0; i < 100.0; i += 1.0)
-  {
-    final float block_x = minx + ((i / 100.0) * (maxx - minx));
-    final float block_y = maxy;
-    translate(block_x, block_y);
-    box(10);
-    translate(-block_x, -block_y);
-  }
-  for (float i = 0; i < 100.0; i += 1.0)
-  {
-    final float block_x = minx;
-    final float block_y = miny + ((i / 100.0) * (maxy - miny));
-    translate(block_x, block_y);
-    box(10);
-    translate(-block_x, -block_y);
-  }
-  for (float i = 0; i < 100.0; i += 1.0)
-  {
-    final float block_x = maxx;
-    final float block_y = miny + ((i / 100.0) * (maxy - miny));
-    translate(block_x, block_y);
-    box(10);
-    translate(-block_x, -block_y);
-  }
+  //Lines in length of the arena first
+  DrawBlockLine(new Coordinat(minx, miny, minz), new Coordinat(maxx, miny, minz));
+  DrawBlockLine(new Coordinat(minx, miny, maxz), new Coordinat(maxx, miny, maxz));
+  DrawBlockLine(new Coordinat(minx, maxy, minz), new Coordinat(maxx, maxy, minz));
+  DrawBlockLine(new Coordinat(minx, maxy, maxz), new Coordinat(maxx, maxy, maxz));
+
+  //Lines at minx, just go head-tail
+  DrawBlockLine(new Coordinat(minx, miny, minz), new Coordinat(minx, miny, maxz));
+  DrawBlockLine(new Coordinat(minx, miny, maxz), new Coordinat(minx, maxy, maxz));
+  DrawBlockLine(new Coordinat(minx, maxy, maxz), new Coordinat(minx, maxy, minz));
+  DrawBlockLine(new Coordinat(minx, maxy, minz), new Coordinat(minx, miny, minz));
+
+  //Lines at maxx, just go head-tail
+  DrawBlockLine(new Coordinat(maxx, miny, minz), new Coordinat(maxx, miny, maxz));
+  DrawBlockLine(new Coordinat(maxx, miny, maxz), new Coordinat(maxx, maxy, maxz));
+  DrawBlockLine(new Coordinat(maxx, maxy, maxz), new Coordinat(maxx, maxy, minz));
+  DrawBlockLine(new Coordinat(maxx, maxy, minz), new Coordinat(maxx, miny, minz));
 }
 
 float get_distance(float dx, float dy)
