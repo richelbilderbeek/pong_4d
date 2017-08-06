@@ -260,7 +260,7 @@ void draw()
   player_2.Display();
   bal.Display();
 
-  draw_surrounding();
+  DrawArena();
 
   fill(255, 128, 128);
   text(score1, -text_size, text_size / 2);
@@ -284,7 +284,7 @@ void DrawBlockLine(Coordinat from, Coordinat to)
   }
 }
 
-void draw_surrounding()
+void DrawArena()
 {
   //Lines in length of the arena first
   DrawBlockLine(new Coordinat(minx, miny, minz), new Coordinat(maxx, miny, minz));
