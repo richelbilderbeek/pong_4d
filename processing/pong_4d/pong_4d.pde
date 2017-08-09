@@ -89,6 +89,7 @@ class Ball
 {
   Ball(Coordinat coordinat, Vector speed, float radius, Arena arena)
   {
+    m_button_state = 0.0;
     m_coordinat = coordinat;
     m_speed = speed;
     m_radius = radius;
@@ -129,6 +130,7 @@ class Ball
   float GetMinZ() { return m_arena.GetMinZ(); }
   float GetMaxZ() { return m_arena.GetMaxZ(); }
   float GetRadius() { return m_radius; }
+  void SetButton(float state) { m_button_state = state; }
   void SetDx(float dx) { m_speed.SetDx(dx); }
   void SetDy(float dy) { m_speed.SetDy(dy); }
   void SetDz(float dz) { m_speed.SetDz(dz); }
@@ -139,6 +141,7 @@ class Ball
   Coordinat m_coordinat;
   float m_radius;
   Arena m_arena;
+  float m_button_state;
 }
 
 //import processing.sound.*;
@@ -234,7 +237,15 @@ void draw()
       if (serial_port.available() == 0) break;
       player_1.SetY(map(serial_port.read(), 1, 255, miny, maxy));
       if (serial_port.available() == 0) break;
+      player_1.SetZ(map(serial_port.read(), 1, 255, minz, maxz));
+      if (serial_port.available() == 0) break;
+      player_1.SetButton(map(serial_port.read(), 1, 255, 0, 255));
+      if (serial_port.available() == 0) break;
       player_2.SetY(map(serial_port.read(), 1, 255, miny, maxy));
+      if (serial_port.available() == 0) break;
+      player_2.SetZ(map(serial_port.read(), 1, 255, minz, maxz));
+      if (serial_port.available() == 0) break;
+      player_2.SetButton(map(serial_port.read(), 1, 255, 0, 255));
     }
   }
   background(32);
