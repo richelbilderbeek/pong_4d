@@ -119,6 +119,7 @@ class Ball
   void ChangeDz(float ddz) { SetDz(GetDz() + ddz); }
   void CheckCollision(final Ball other)
   {
+    if (1 + 1 == 2) return;
     final double resitution_rate = 1.0; //Restitution rate: 1.0 = perfect elastic colission
     final double mass1 = 1.0;
     final double mass2 = 1.0;
@@ -264,7 +265,7 @@ Serial serial_port;
 
 
 /// standalone means without Arduino
-final boolean standalone = false;
+final boolean standalone = true;
 
 void setup()
 {
